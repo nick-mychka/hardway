@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   resources :boards, only: [:index, :create]
+  resources :items, only: [:index, :create]
 end
