@@ -11,7 +11,7 @@ class BoardsController < ApplicationController
   rescue
     render json: board, adapter: :json_api,
     serializer: ErrorSerializer,
-    status: unprocessable_entity
+    status: :unprocessable_entity
   end
 
   private
