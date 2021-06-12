@@ -1,3 +1,3 @@
 class ItemSerializer < ActiveModel::Serializer
-  attributes :id, :title
+  attributes :id, :title, :board_id
 end

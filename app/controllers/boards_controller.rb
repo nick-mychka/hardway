@@ -14,6 +14,19 @@ class BoardsController < ApplicationController
     status: :unprocessable_entity
   end
 
+  def show
+    board = Board.find(params[:id])
+    render json: board, status: :ok
+  rescue
+    render json: "Not Found", status: :not_found
+  end
+
+  def destroy
+    board = Board.find(params[:id])
+    board.destroy
+    head :no_content
+  end
+
   private
 
   def board_params
