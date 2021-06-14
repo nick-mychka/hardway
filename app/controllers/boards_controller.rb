@@ -27,6 +27,20 @@ class BoardsController < ApplicationController
     head :no_content
   end
 
+  def board_items
+    board = Board.find(params[:id])
+    render json: board.items, status: :ok
+  rescue
+    render json: "Not Found", status: :not_found
+  end
+
+  def active_boards
+    board = Board.where({ created_at: Time.current.beginning_of_day..Time.current.end_of_day })
+    render json: board, status: :ok
+  rescue
+    render json: "Not Found", status: :not_found
+  end
+
   private
 
   def board_params

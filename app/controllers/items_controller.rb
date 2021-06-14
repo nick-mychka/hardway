@@ -17,6 +17,6 @@ class ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:data).require(:attributes).permit(:title, :done)
+    params.require(:data).require(:attributes).permit(:title, :done, :board_id)
   end
 end
