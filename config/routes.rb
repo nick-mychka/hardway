@@ -10,5 +10,5 @@ Rails.application.routes.draw do
       get :active_boards, path: '/active'
     end
   end
-  resources :items, only: [:index, :create]
+  resources :items, only: [:index, :create, :destroy, :update]
 end
