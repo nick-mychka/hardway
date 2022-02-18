@@ -9,9 +9,7 @@ class MarathonsController < ApplicationController
     marathon.save!
     render json: marathon, status: :created
   rescue
-    render json: marathon, adapter: :json_api,
-    serializer: ErrorSerializer,
-    status: :unprocessable_entity
+    render json: marathon, status: :unprocessable_entity
   end
 
   def show

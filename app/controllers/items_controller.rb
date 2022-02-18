@@ -1,17 +1,15 @@
 class ItemsController < ApplicationController
   def index
     items = Item.all
-    render json: items
+    render json: ItemBlueprint.render(items)
   end
 
   def create
     item = Item.new(item_params)
     item.save!
-    render json: item, status: :created
+    render json: ItemBlueprint.render(item), status: :created
   rescue
-    render json: item, adapter: :json_api,
-    serializer: ErrorSerializer,
-    status: :unprocessable_entity
+    render json: ItemBlueprint.render(item), status: :unprocessable_entity
   end
 
   def destroy
@@ -23,11 +21,9 @@ class ItemsController < ApplicationController
   def update
     item = Item.find(params[:id])
     item.update!(update_item_params)
-    render json: item, status: :ok
+    render json: ItemBlueprint.render(item), status: :ok
   rescue
-    render json: item, adapter: :json_api,
-    serializer: ErrorSerializer,
-    status: :unprocessable_entity
+    render json: ItemBlueprint.render(item), status: :unprocessable_entity
   end
 
   private

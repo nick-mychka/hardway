@@ -1,22 +1,20 @@
 class BoardsController < ApplicationController
   def index
     boards = Board.all
-    render json: boards
+    render json: BoardBlueprint.render(boards)
   end
 
   def create
     board = Board.new(board_params)
     board.save!
-    render json: board, status: :created
+    render json: BoardBlueprint.render(board), status: :created
   rescue
-    render json: board, adapter: :json_api,
-    serializer: ErrorSerializer,
-    status: :unprocessable_entity
+    render json: BoardBlueprint.render(board), status: :unprocessable_entity
   end
 
   def show
     board = Board.find(params[:id])
-    render json: board, status: :ok
+    render json: BoardBlueprint.render(board), status: :ok
   rescue
     render json: "Not Found", status: :not_found
   end
@@ -29,14 +27,14 @@ class BoardsController < ApplicationController
 
   def board_items
     board = Board.find(params[:id])
-    render json: board.items, status: :ok
+    render json: BoardBlueprint.render(board.items), status: :ok
   rescue
     render json: "Not Found", status: :not_found
   end
 
   def active_boards
     board = Board.where({ created_at: Time.current.beginning_of_day..Time.current.end_of_day })
-    render json: board, status: :ok
+    render json: BoardBlueprint.render(board), status: :ok
   rescue
     render json: "Not Found", status: :not_found
   end
