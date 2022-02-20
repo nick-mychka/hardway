@@ -4,17 +4,16 @@ Rails.application.routes.draw do
 
   resources :marathons, only: [:index, :show, :create, :destroy] do
     member do
-      get :boards, path: '/boards'
+      get :boards
     end
   end
 
   resources :boards, only: [:index, :show, :create, :destroy] do
-    member do
-      get :board_items, path: '/items'
-    end
+    resources :items, only: [:index, :create, :destroy, :update]
+
     collection do
-      get :active_boards, path: '/active'
+      get :todays_boards
+      get :standalone_boards
     end
   end
-  resources :items, only: [:index, :create, :destroy, :update]
 end

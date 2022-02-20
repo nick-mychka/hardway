@@ -9,39 +9,39 @@ class BoardsController < ApplicationController
     board.save!
     render json: BoardBlueprint.render(board), status: :created
   rescue
-    render json: BoardBlueprint.render(board), status: :unprocessable_entity
+    render json: board, status: :unprocessable_entity
   end
 
   def show
-    board = Board.find(params[:id])
-    render json: BoardBlueprint.render(board), status: :ok
+    render json: BoardBlueprint.render(current_board), status: :ok
   rescue
     render json: "Not Found", status: :not_found
   end
 
   def destroy
-    board = Board.find(params[:id])
-    board.destroy
+    current_board.destroy
     head :no_content
   end
 
-  def board_items
-    board = Board.find(params[:id])
-    render json: BoardBlueprint.render(board.items), status: :ok
+  def todays_boards
+    boards = Board.todays_boards
+    render json: BoardBlueprint.render(boards), status: :ok
   rescue
     render json: "Not Found", status: :not_found
   end
 
-  def active_boards
-    board = Board.where({ created_at: Time.current.beginning_of_day..Time.current.end_of_day })
-    render json: BoardBlueprint.render(board), status: :ok
-  rescue
-    render json: "Not Found", status: :not_found
+  def standalone_boards
+    boards = Board.standalone_boards
+    render json: BoardBlueprint.render(boards)
   end
 
   private
 
   def board_params
-    params.require(:data).require(:attributes).permit(:title, :date)
+    params.require(:board).permit(:title, :date, :marathon_id)
+  end
+
+  def current_board
+    @_current_board ||= Board.find(params[:id])
   end
 end

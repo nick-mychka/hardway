@@ -1,38 +1,45 @@
 class ItemsController < ApplicationController
   def index
-    items = Item.all
-    render json: ItemBlueprint.render(items)
+    render json: ItemBlueprint.render(current_board.items), status: :ok
+  rescue
+    render json: "Not Found", status: :not_found
   end
 
   def create
-    item = Item.new(item_params)
+    item = current_board.items.new(item_params)
     item.save!
     render json: ItemBlueprint.render(item), status: :created
   rescue
-    render json: ItemBlueprint.render(item), status: :unprocessable_entity
+    render json: item, status: :unprocessable_entity
   end
 
   def destroy
-    item = Item.find(params[:id])
-    item.destroy
+    current_item.destroy
     head :no_content
   end
 
   def update
-    item = Item.find(params[:id])
-    item.update!(update_item_params)
-    render json: ItemBlueprint.render(item), status: :ok
+    current_item.update!(update_item_params)
+    render json: ItemBlueprint.render(current_item), status: :ok
   rescue
-    render json: ItemBlueprint.render(item), status: :unprocessable_entity
+    render json: current_item, status: :unprocessable_entity
   end
 
   private
 
   def item_params
-    params.require(:data).require(:attributes).permit(:title, :done, :board_id)
+    params.require(:item).permit(:title, :done, :board_id)
   end
 
   def update_item_params
-    params.require(:data).require(:attributes).permit(:done)
+    params.require(:item).permit(:done)
+  end
+
+  def current_board
+    @_current_board ||= Board.find(params[:board_id])
+  end
+
+  def current_item
+    @_current_item ||= current_board.items.find(params[:id])
   end
 end
